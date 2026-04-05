@@ -1,0 +1,76 @@
+logictool/
+├── pyproject.toml                  # uv project config + dependencies
+├── .python-version                 # python version pin
+├── .env                            # API keys (ANTHROPIC_API_KEY, GEMINI_API_KEY)
+├── .env.example
+├── config.yaml                     # generation config, model prefs, paths
+│
+├── src/
+│   └── logictool/
+│       ├── __init__.py
+│       │
+│       ├── models/                 # Data Models (Pydantic)
+│       │   ├── __init__.py
+│       │   ├── snippet.py          # Snippet, SnippetMetadata, SnippetBatch
+│       │   ├── domain.py           # Domain, SubDomain, ComplexityLevel
+│       │   └── enums.py            # Language, Complexity, SnippetType enums
+│       │
+│       ├── llm/                    # LLM Factory + Providers
+│       │   ├── __init__.py
+│       │   ├── base.py             # Abstract LLMProvider interface
+│       │   ├── factory.py          # LLMFactory - creates provider by name
+│       │   ├── claude_provider.py  # Anthropic Claude implementation
+│       │   └── gemini_provider.py  # Google Gemini implementation
+│       │
+│       ├── repository/             # Repository Pattern - data access
+│       │   ├── __init__.py
+│       │   ├── base.py             # Abstract SnippetRepository interface
+│       │   ├── sqlite_repo.py      # SQLite implementation
+│       │   └── json_repo.py        # JSON file export/import implementation
+│       │
+│       ├── services/               # Business Logic
+│       │   ├── __init__.py
+│       │   ├── generator.py        # SnippetGenerationService - orchestrates generation
+│       │   ├── validator.py        # Validates generated snippets
+│       │   └── embedder.py         # S-BERT embedding service
+│       │
+│       ├── pipeline/               # Generation Pipeline
+│       │   ├── __init__.py
+│       │   ├── runner.py           # PipelineRunner - parallel execution
+│       │   ├── task.py             # GenerationTask dataclass
+│       │   └── prompts.py          # Prompt templates per domain
+│       │
+│       ├── search/                 # Search Engine
+│       │   ├── __init__.py
+│       │   ├── semantic.py         # S-BERT cosine similarity search
+│       │   ├── keyword.py          # FTS5 keyword search
+│       │   └── hybrid.py           # Combined search strategy
+│       │
+│       ├── config/                 # Configuration
+│       │   ├── __init__.py
+│       │   ├── settings.py         # Pydantic BaseSettings loader
+│       │   └── domains.py          # All domain definitions
+│       │
+│       └── cli/                    # CLI Interface
+│           ├── __init__.py
+│           ├── main.py             # Entry point (typer app)
+│           ├── generate.py         # generate commands
+│           ├── search.py           # search commands
+│           └── manage.py           # add/import/export/stats commands
+│
+├── data/
+│   ├── snippets.db                 # SQLite database
+│   ├── embeddings.npz              # Pre-computed vectors
+│   └── raw/                        # Generated JSON files per domain
+│       ├── strings.json
+│       ├── pandas.json
+│       └── ...
+│
+├── tests/
+│   ├── test_models.py
+│   ├── test_repository.py
+│   ├── test_generator.py
+│   └── test_search.py
+│
+└── scripts/
+    └── seed_domains.py             # Quick script to verify domain config
